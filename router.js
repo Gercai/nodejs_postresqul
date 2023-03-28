@@ -29,24 +29,32 @@ router.get(`/${table}/:id`, async (req, res) => {
       res.sendStatus(500);
     }
   });
-  
-
-
 } )
 
 // Editposts
-router.post("/adduser", (req, res) => {
+router.get("/adduser", (req, res) => {
     res.sendFile('./views/addUser.html', { root: __dirname });
 })
 
 
 // POSTS!
-
 router.post(`/user`, async (req, res) => {
     const {first_name, last_name, age, active}  = req.body;
+    console.log(first_name);
     try {
-      const { rows } = await pool.query(`INSERT INTO users (first_name,last_name,are,active) VALUES($1,$2,$3,$4) RETURNING *`
-      ,[first_name, last_name, age, active]);
+      const { rows } = await pool.query(`INSERT INTO users (first_name,last_name,age) VALUES($1,$2,$3) RETURNING *`
+      ,[first_name, last_name, age]);
+      res.json({ data: rows });
+    } catch (err) {
+      res.sendStatus(500);
+    }
+    res.end();
+  });
+
+  router.post(`/order`, async (req, res) => {
+    try {
+      const { rows } = await pool.query(`INSERT INTO orders (price,user_id) VALUES($1,$2) RETURNING *`
+      ,["20","1"]);
       res.json({ data: rows });
     } catch (err) {
       res.sendStatus(500);
@@ -55,7 +63,32 @@ router.post(`/user`, async (req, res) => {
   });
   
 
+  // PUT
 
+  router.put(`/user`, async (req, res) => {
+    try {
+      const { rows } = await pool.query(`UPDATE users SET first_name=$1,last_name=$2 where id=$3 RETURNING *`
+      ,["Usagi","Uma","1"]);
+      res.json({ data: rows });
+    } catch (err) {
+      res.sendStatus(500);
+    }
+    res.end();
+  });
+
+  router.put(`/order`, async (req, res) => {
+    try {
+      const { rows } = await pool.query(`UPDATE users SET price=$1 where id=$2 RETURNING *`
+      ,["23","1"]);
+      res.json({ data: rows });
+    } catch (err) {
+      res.sendStatus(500);
+    }
+    res.end();
+  });
+
+
+  
 
 
 
