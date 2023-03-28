@@ -88,7 +88,34 @@ router.post(`/user`, async (req, res) => {
   });
 
 
-  
+  // DELETE
+
+  router.delete(`/user/:id`, async (req, res) => {
+    const {id} = req.params;
+    try {
+      const { rows } = await pool.query("DELETE FROM users WHERE id=$1"
+      ,[id]);
+      res.json({ message: `user with id${id} deleted` });
+    } catch (err) {
+      res.sendStatus(404);
+    }
+    res.end();
+  });
+
+  router.delete(`/order/:id`, async (req, res) => {
+    const {id} = req.params;
+    try {
+      const { rows } = await pool.query("DELETE FROM orders WHERE id=$1"
+      ,[id]);
+      res.json({ message: `order with id${id} deleted` });
+    } catch (err) {
+      res.sendStatus(404);
+    }
+    res.end();
+  });
+
+
+
 
 
 
