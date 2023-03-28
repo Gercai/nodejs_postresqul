@@ -119,15 +119,27 @@ router.post(`/user`, async (req, res) => {
     const {id} = req.params;
     try {
       const { rows } = await pool.query("SELECT orders.price FROM users INNER JOIN orders ON users.id=orders.user_id WHERE users.id=$1",[id]);
-      res.json({ data: rows });
+      res.json( rows );
     } catch (err) {
       res.sendStatus(404);
     }
     res.end();
   });
 
-
-
+  
+  router.get(`/:id/check-inactive`, async (req, res) => {
+    const {id} = req.params;
+    try {
+        const { rows } = await pool.query("SELECT orders.price FROM users INNER JOIN orders ON users.id=orders.user_id WHERE users.id=$1",[id]);
+        res.json( rows.length);  
+        if(rows.length === 0){
+            await pool.query("UPDATE users SET active=false WHERE users.id=$1",[id])
+        }
+     } catch (err) {
+      res.sendStatus(404);
+    }
+    res.end();
+  });
 
 
 module.exports = router;
