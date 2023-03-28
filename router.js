@@ -115,6 +115,17 @@ router.post(`/user`, async (req, res) => {
   });
 
 
+  router.get(`/:id/orders`, async (req, res) => {
+    const {id} = req.params;
+    try {
+      const { rows } = await pool.query("SELECT orders.price FROM users INNER JOIN orders ON users.id=orders.user_id WHERE users.id=$1",[id]);
+      res.json({ data: rows });
+    } catch (err) {
+      res.sendStatus(404);
+    }
+    res.end();
+  });
+
 
 
 
